@@ -67,23 +67,23 @@ for entry in league_table['entry']:
   overall_rank.append(manager_profile['current'][0]['overall_rank'])
   team_value.append(manager_profile['current'][0]['value'])
   if len(manager_profile['chips']) == 0:
-    lists['bboost'].append('Dostepny')
-    lists['3xc'].append('Dostepny')
-    lists['freehit'].append('Dostepny')
-    lists['wildcard'].append('Dostepny')
+    lists['bboost'].append('Avalible')
+    lists['3xc'].append('Avalible')
+    lists['freehit'].append('Avalible')
+    lists['wildcard'].append('Avalible')
   elif len(manager_profile['chips']) == 1:
     for string in possible_chips:
       if string == manager_profile['chips'][0]['name'] :
-        lists[string].append('Niedostepny')
+        lists[string].append('Not_avalible')
       else:
-        lists[string].append('Dostepny')
+        lists[string].append('Avalible')
   elif len(manager_profile['chips']) > 1 :
     for i in range(len(manager_profile['chips']) - 1):
       for string in possible_chips:
         if string == manager_profile['chips'][i]['name'] :
-          lists[string].append('Niedostepny')
+          lists[string].append('Not_avalible')
         else:
-          lists[string].append('Dostepny')
+          lists[string].append('Avalible')
 
 
 team_value = np.array(team_value) / 10
@@ -208,7 +208,7 @@ goalkeeper_container = st.container()
 team_stats = st.container()
 
 def color_survived(val):
-    color = '#59eb00' if val == 'Dostepny' else '#EE4B2B'
+    color = '#59eb00' if val == 'Avalible' else '#EE4B2B'
     return f'background-color: {color}'
 
 
