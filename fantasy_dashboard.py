@@ -3,6 +3,8 @@ import pandas as pd
 import requests
 import json
 import numpy as np
+import plotly.graph_objects as go
+
 
 #league number
 classicleague_number = 615541
@@ -156,12 +158,39 @@ winner_table = league_table[['rank','rank_change','player','team_name','total_po
 gw_table = league_table[['player','gw_points','goalkeeper','captain','vice_captain','bench_points']]
 teams_table = league_table[['player','bench_boost', 'wildcard', 'free_hit', 'tripple_captain']]
 
+#Getting the number of goalkeepers and captained
+
+u_goalkeepers = league_table['goalkeeper'].unique().tolist()
+u_captained = league_table['captain'].unique().tolist()
+
+goallies_values = np.zeros(len(u_goalkeepers))
+captained_values = np.zeros(len(u_captained))
+
+                   
+for goalkeeper in league_table['goalkeeper']:
+    for i in range(len(u_goalkeepers)):
+        if goalkeeper == u_goalkeepers[i]:
+            goallies_values[i] = goallies_values[i] + 1
+
+for captain in league_table['captain']:
+    for i in range(len(u_captained)):
+        if captain == u_captained[i]:
+            captained_values[i] = captained_values[i] + 1
+
+            
+    
+        
+
+
+
+
 
 #######################################################STREAMLIT#############################################################################3
 
 header = st.container()
 dataset = st.container()
 gw_stats = st.container()
+col1, col2 = st.columns(2)
 team_stats = st.container()
 
 def color_survived(val):
@@ -188,16 +217,13 @@ with st.sidebar:
     st.write(":smiling_imp:[Creators github](https://github.com/eryk0wski):smiling_imp:")
     st.write("Thats fully customizable minileague dashboard \n. You can use it freely, just ")
     
-    
-    
-    
 with dataset:
     st.title('Winners table')
     st.dataframe(winner_table.head(11).style.apply(highlight_winners, axis=1))
     st.divider()
 
 with team_stats:
-    tittl = 'Team stats for gameweek ' + str(current_gw)
+    tittl = 'Chip\'s avalibility gw ' + str(current_gw)
     st.title(tittl)
     st.dataframe(teams_table.style.applymap(color_survived, subset=['bench_boost', 'wildcard', 'free_hit', 'tripple_captain']))
 
@@ -205,4 +231,19 @@ with gw_stats:
     tittle_dummy = 'Gameweek ' + str(current_gw)
     st.title(tittle_dummy)
     st.dataframe(gw_table)
+
+with col1:
+    st.header("Capitained")
+    labels = u_captained
+    values = captained_values
+    fig = go.Figure(data=[go.Pie(labels=labels, values=values)])
+    fig.show()
+
+with col2:
+    st.header("Goalkeepers")
+    labels = u_goalkeepers
+    values = goallies_values
+    fig = go.Figure(data=[go.Pie(labels=labels, values=values)])
+    fig.show()
+
 
