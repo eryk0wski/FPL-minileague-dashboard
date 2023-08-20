@@ -237,13 +237,14 @@ with col1:
     labels = u_captained
     values = captained_values
     fig = go.Figure(data=[go.Pie(labels=labels, values=values)])
-    fig.show()
+    st.plotly_chart(fig)
 
 with col2:
     st.header("Goalkeepers")
     labels = u_goalkeepers
     values = goallies_values
     fig = go.Figure(data=[go.Pie(labels=labels, values=values)])
-    fig.show()
+    st.plotly_chart(fig)
+
 
 
