@@ -214,7 +214,7 @@ def color_survived(val):
 
 
 def highlight_winners(s):
-    return ['background-color: #59eb00']*len(s) if s.prize> 0 else ['background-color: #FFFFFF']*len(s)
+    return ['background-color: #59eb00']*len(s) if s.prize> 0 else ['']*len(s)
 
 
 with header:
@@ -225,7 +225,7 @@ with header:
 
 with st.sidebar:
     st.write("***FPL mini-league dashboard***")
-    st.write("version 0.1.0 18.08.2023")
+    st.write("version 0.2.0 20.08.2023")
     league_url = ":soccer:[FPL mini-league link](https://fantasy.premierleague.com/leagues/" + str(classicleague_number) + "/standings/c):soccer:"
     st.write(league_url)
     st.write(":smiling_imp:[Creators github](https://github.com/eryk0wski):smiling_imp:")
@@ -259,6 +259,3 @@ with goalkeeper_container:
     values = goallies_values
     fig = go.Figure(data=[go.Pie(labels=labels, values=values)])
     st.plotly_chart(fig,use_container_width=False)
-
-
-
