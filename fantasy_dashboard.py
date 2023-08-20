@@ -94,10 +94,29 @@ league_table['bench_boost'] = lists['bboost']
 league_table['wildcard'] = lists['wildcard']
 league_table['free_hit'] = lists['freehit']
 league_table['tripple_captain']= lists['3xc']
-league_table['goalkeeper'] = goalkeepers_id
+
+f = open('fpl_pd.json',encoding='utf-8')
+player_data = json.load(f)
+
+goalkeepers_names = []
+captain_names = []
+vice_captain_names = []
+
+for goalkeeper in goalkeepers_id:
+    goalkeepers_names.append(player_data[str(goalkeeper)])
+
+for captain in captain_id:
+    captain_names.append(player_data[str(captain)])
+
+for vice_captain in vice_captain_id:
+    vice_captain_names.append(player_data[str(vice_captain)])
+    
+f.close()
+
+league_table['goalkeeper'] = goalkeepers_names
 league_table['bench_points'] = bench_points
-league_table['vice_captain'] = vice_captain_id
-league_table['captain'] = captain_id
+league_table['vice_captain'] = vice_captain_names
+league_table['captain'] = captain_names
 
 
 
@@ -176,21 +195,16 @@ for captain in league_table['captain']:
     for i in range(len(u_captained)):
         if captain == u_captained[i]:
             captained_values[i] = captained_values[i] + 1
-
             
-    
-        
-
-
-
-
-
+gw_table = gw_table.sort_values(by='gw_points',ascending = False).reset_index(drop = True)
 #######################################################STREAMLIT#############################################################################3
 
 header = st.container()
 dataset = st.container()
 gw_stats = st.container()
-col1, col2 = st.columns(2)
+captain_container = st.container()
+goalkeeper_container = st.container()
+
 team_stats = st.container()
 
 def color_survived(val):
@@ -215,7 +229,7 @@ with st.sidebar:
     league_url = ":soccer:[FPL mini-league link](https://fantasy.premierleague.com/leagues/" + str(classicleague_number) + "/standings/c):soccer:"
     st.write(league_url)
     st.write(":smiling_imp:[Creators github](https://github.com/eryk0wski):smiling_imp:")
-    st.write("Thats fully customizable minileague dashboard \n. You can use it freely, just ")
+    st.write("Thats fully customizable minileague dashboard \n. You can use it freely, just mention the authors github")
     
 with dataset:
     st.title('Winners table')
@@ -232,19 +246,19 @@ with gw_stats:
     st.title(tittle_dummy)
     st.dataframe(gw_table)
 
-with col1:
+with captain_container:
     st.header("Capitained")
     labels = u_captained
     values = captained_values
     fig = go.Figure(data=[go.Pie(labels=labels, values=values)])
-    st.plotly_chart(fig)
-
-with col2:
+    fig.update_layout()
+    st.plotly_chart(fig,use_container_width=False)
+with goalkeeper_container:
     st.header("Goalkeepers")
     labels = u_goalkeepers
     values = goallies_values
     fig = go.Figure(data=[go.Pie(labels=labels, values=values)])
-    st.plotly_chart(fig)
+    st.plotly_chart(fig,use_container_width=False)
 
 
 
