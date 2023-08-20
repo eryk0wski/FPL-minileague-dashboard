@@ -10,6 +10,16 @@ URL = 'https://fantasy.premierleague.com/api/leagues-classic/' + str(classicleag
 page = requests.get(URL)
 data = json.loads(page.text)
 
+
+#random player from league team_code
+player_id_number = 1515069
+GW_URL = 'https://fantasy.premierleague.com/api/entry/' + str(player_id_number) +'/'
+gw_page = requests.get(GW_URL)
+gw_data = json.loads(gw_page.text)
+current_gw = gw_data["current_event"]
+
+
+
 #league data - upade day and hour and league name
 league_name = data['league']['name']
 last_update = data['last_updated_data'][0:10]
@@ -163,6 +173,7 @@ with dataset:
     st.divider()
 
 with team_stats:
-    st.title('Team stats')
+    tittl = 'Team stats for gameweek ' + str(current_gw)
+    st.title(tittl)
     st.dataframe(teams_table.style.applymap(color_survived, subset=['bench_boost', 'wildcard', 'free_hit', 'tripple_captain']))
 
