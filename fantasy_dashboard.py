@@ -64,8 +64,8 @@ for entry in league_table['entry']:
           vice_captain_id.append(gw_players_data['picks'][i]['element'])
   manager_site = requests.get(manager_url)
   manager_profile = json.loads(manager_site.text)
-  overall_rank.append(manager_profile['current'][0]['overall_rank'])
-  team_value.append(manager_profile['current'][0]['value'])
+  overall_rank.append(manager_profile['current'][current_gw - 1]['overall_rank'])
+  team_value.append(manager_profile['current'][current_gw - 1]['value'])
   if len(manager_profile['chips']) == 0:
     lists['bboost'].append('Avalible')
     lists['3xc'].append('Avalible')
