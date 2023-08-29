@@ -293,11 +293,11 @@ with captain_container:
     values = captained_values
     fig = go.Figure(data=[go.Pie(labels=labels, values=values)])
     fig.update_layout()
-    st.plotly_chart(fig,use_container_width=False)
+    st.plotly_chart(fig,use_container_width=True)
     
 with goalkeeper_container:
     st.header("Goalkeepers")
     labels = u_goalkeepers
     values = goallies_values
     fig = go.Figure(data=[go.Pie(labels=labels, values=values)])
-    st.plotly_chart(fig,use_container_width=False)
+    st.plotly_chart(fig,use_container_width=True)
