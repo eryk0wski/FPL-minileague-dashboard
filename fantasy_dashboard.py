@@ -228,7 +228,12 @@ for captain in league_table['captain']:
             captained_values[i] = captained_values[i] + 1
             
 gw_table = gw_table.sort_values(by='gw_points',ascending = False).reset_index(drop = True)
-#######################################################STREAMLIT#############################################################################3
+
+
+
+#######################################################STREAMLIT#############################################################################
+
+st.set_page_config(page_title= 'FPL_dashboard', layout="wide" ,page_icon=":soccer:", initial_sidebar_state = "auto")
 
 header = st.container()
 dataset = st.container()
@@ -250,18 +255,20 @@ def highlight_winners(s):
 
 
 with header:
-    st.title('FPL mini-league dashboard')
-    st.text("Test site for our mini league")
-    st.text("Last updated: " + last_update + ' ' + last_update_hour)
+    st.title('FPL mini league dashboard')
+    st.text("Dashboard for our FPL mini league")
+    st.text("Last database update: " + last_update + ' ' + last_update_hour)
     st.divider()
 
 with st.sidebar:
-    st.write("***FPL mini-league dashboard***")
-    st.write("version 0.2.0 20.08.2023")
+    st.markdown('''<span style='color: #FFFFFF'>***FPL mini-league dashboard***</span>''', unsafe_allow_html=True)
+    st.markdown('''<span style='color: #FFFFFF'>version 0.3.0 05.09.2023</span>''', unsafe_allow_html=True)
+    #st.write("version 0.2.0 20.08.2023")
     league_url = ":soccer:[FPL mini-league link](https://fantasy.premierleague.com/leagues/" + str(classicleague_number) + "/standings/c):soccer:"
     st.write(league_url)
     st.write(":smiling_imp:[Creators github](https://github.com/eryk0wski):smiling_imp:")
-    st.write("Thats fully customizable minileague dashboard \n. You can use it freely, just mention the authors github")
+    st.markdown('''<span style='color: #FFFFFF'>Thats fully customizable minileague dashboard \n. You can use it freely, just mention the authors github</span>''', unsafe_allow_html=True)
+    #st.write("Thats fully customizable minileague dashboard \n. You can use it freely, just mention the authors github")
     
 with dataset:
     st.title('Winners table')
@@ -272,7 +279,7 @@ with team_stats:
     tittl = 'Chip\'s avalibility gw ' + str(current_gw)
     st.title(tittl)
     st.dataframe(teams_table.style.applymap(color_survived, subset=['bench_boost', 'wildcard', 'free_hit', 'tripple_captain']))
-
+    
 with gw_stats:
     tittle_dummy = 'Gameweek ' + str(current_gw)
     st.title(tittle_dummy)
@@ -280,6 +287,7 @@ with gw_stats:
 
 with col1:
     st.header('Ownership percentage')
+    #st.table(df_players_ownership.head(10))
     st.dataframe(df_players_ownership)
 
 with col2:
