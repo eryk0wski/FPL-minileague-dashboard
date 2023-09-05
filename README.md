@@ -11,6 +11,9 @@ The second one shows the last gameweek performance and the third shows how the c
 First pie chart shows the captain percent ownership and the second one shows goalkeepers percent ownership.
 
 ## Screenshots
+
+Few chosen - not all -  of the graphs and dataframes in the app.
+
 ![image](https://github.com/eryk0wski/FPL-minileague-dashboard/assets/121037666/97b363f3-e3f5-471c-b6b8-d25444c18c4f)
 
 ![image](https://github.com/eryk0wski/FPL-minileague-dashboard/assets/121037666/2a8d2e6f-61fe-43cd-8168-3bf900e5f27f)
