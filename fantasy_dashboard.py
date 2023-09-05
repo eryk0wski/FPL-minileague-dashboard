@@ -260,14 +260,15 @@ with header:
     st.text("Last database update: " + last_update + ' ' + last_update_hour)
     st.divider()
 
+#if i can get themes to work, color should be changed to #FFFFFF - white
 with st.sidebar:
-    st.markdown('''<span style='color: #FFFFFF'>***FPL mini-league dashboard***</span>''', unsafe_allow_html=True)
-    st.markdown('''<span style='color: #FFFFFF'>version 0.3.0 05.09.2023</span>''', unsafe_allow_html=True)
+    st.markdown('''<span style='color: #000000'>***FPL mini-league dashboard***</span>''', unsafe_allow_html=True)
+    st.markdown('''<span style='color: #000000'>version 0.3.0 05.09.2023</span>''', unsafe_allow_html=True)
     #st.write("version 0.2.0 20.08.2023")
     league_url = ":soccer:[FPL mini-league link](https://fantasy.premierleague.com/leagues/" + str(classicleague_number) + "/standings/c):soccer:"
     st.write(league_url)
     st.write(":smiling_imp:[Creators github](https://github.com/eryk0wski):smiling_imp:")
-    st.markdown('''<span style='color: #FFFFFF'>Thats fully customizable minileague dashboard \n. You can use it freely, just mention the authors github</span>''', unsafe_allow_html=True)
+    st.markdown('''<span style='color: #000000'>Thats fully customizable minileague dashboard \n. You can use it freely, just mention the authors github</span>''', unsafe_allow_html=True)
     #st.write("Thats fully customizable minileague dashboard \n. You can use it freely, just mention the authors github")
     
 with dataset:
