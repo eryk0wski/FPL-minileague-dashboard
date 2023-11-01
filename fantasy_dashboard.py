@@ -52,6 +52,9 @@ bench_points = []
 possible_chips = ['3xc','wildcard','freehit', 'bboost']
 players_ownership = []
 players_in_league = len(league_table['entry'])
+transfers_in = []
+transfers_out = []
+transfer_cost = []
 
 #very funky code that checks for wildcards avalible for each player and their overall_rank and team value
 
@@ -59,7 +62,8 @@ players_in_league = len(league_table['entry'])
 
 for entry in league_table['entry']:
   manager_url = 'https://fantasy.premierleague.com/api/entry/'+ str(entry) +'/history'
-  gw_players_url = 'https://fantasy.premierleague.com/api/entry/' + str(entry) + '/event/' + str(current_gw) +'/picks/'  
+  gw_players_url = 'https://fantasy.premierleague.com/api/entry/' + str(entry) + '/event/' + str(current_gw) +'/picks/'
+  gw_transfers_url = 'https://fantasy.premierleague.com/api/entry/' + str(entry) + '/transfers/'
   gw_players_site = requests.get(gw_players_url)
   gw_players_data = json.loads(gw_players_site.text)  
   goalkeepers_id.append(gw_players_data['picks'][0]['element'])
@@ -75,6 +79,7 @@ for entry in league_table['entry']:
   overall_rank.append(manager_profile['current'][current_gw - 1]['overall_rank'])
   team_value.append(manager_profile['current'][current_gw - 1]['value'])
   in_the_bank.append(manager_profile['current'][current_gw - 1]['bank'])
+  transfer_cost.append(-1 * manager_profile['current'][current_gw -1]['event_transfers_cost'])
   if len(manager_profile['chips']) == 0:
     lists['bboost'].append('Avalible')
     lists['3xc'].append('Avalible')
@@ -93,12 +98,23 @@ for entry in league_table['entry']:
           lists[string].append('Not_avalible')
         else:
           lists[string].append('Avalible')
+  gw_transfers_site = requests.get(gw_transfers_url)
+  gw_transfers_data = json.loads(gw_transfers_site.text)
+  trans_in = []
+  trans_out = []
+  for i in range(len(gw_transfers_data)):
+      if gw_transfers_data[i]['event'] == current_gw:
+          trans_in.append(gw_transfers_data[i]['element_in'])
+          trans_out.append(gw_transfers_data[i]['element_out'])
+  transfers_in.append(trans_in)
+  transfers_out.append(trans_out)
+          
 
 
 team_value = np.array(team_value) / 10
 in_the_bank = np.array(in_the_bank) / 10
 
-
+league_table['transfer_cost'] = transfer_cost
 league_table['in_the_bank'] = in_the_bank
 league_table['overall_rank'] = overall_rank
 league_table['Total_value'] = team_value
@@ -106,6 +122,8 @@ league_table['bench_boost'] = lists['bboost']
 league_table['wildcard'] = lists['wildcard']
 league_table['free_hit'] = lists['freehit']
 league_table['tripple_captain']= lists['3xc']
+league_table['transfers_in'] = transfers_in
+league_table['transfers_out'] = transfers_out
 
 f = open('fpl_pd.json',encoding='utf-8')
 player_data = json.load(f)
@@ -114,6 +132,8 @@ goalkeepers_names = []
 captain_names = []
 vice_captain_names = []
 player_ownership_names = []
+transfer_in_names =[]
+transfer_out_names=[]
 
 for player in players_ownership:
     player_ownership_names.append(player_data[str(player)])
@@ -127,6 +147,16 @@ for captain in captain_id:
 for vice_captain in vice_captain_id:
     vice_captain_names.append(player_data[str(vice_captain)])
 
+##################### DODAC LISTE W LISCIE ####################
+for i in range(len(transfers_out)):
+    for k in range(len(transfers_out[i])):
+        temp = player_data[str(transfers_out[i][k])]
+        transfers_out[i][k] = temp
+for i in range(len(transfers_in)):
+    for k in range(len(transfers_in[i])):
+        temp = player_data[str(transfers_in[i][k])]
+        transfers_in[i][k] = temp
+    
 f.close()
 
 #adding player ownership database
@@ -143,7 +173,8 @@ df_players_ownership = df_players_ownership.sort_values(by =['Count'], ascending
 
 
 
-
+league_table['transfers_in'] = transfers_in
+league_table['transfers_out'] = transfers_out
 league_table['goalkeeper'] = goalkeepers_names
 league_table['bench_points'] = bench_points
 league_table['vice_captain'] = vice_captain_names
@@ -165,7 +196,7 @@ league_table = league_table.rename(columns = {"event_total":"gw_points", "total"
 #league_table['rank_change'] = rank_change
 
 # change columns order
-league_table = league_table[['rank','rank_change','player_name', 'gw_points', 'last_rank', 'total_points', 'team_name', 'overall_rank', 'Total_value','in_the_bank', 'bench_boost', 'wildcard', 'free_hit', 'tripple_captain', 'goalkeeper', 'bench_points','captain', 'vice_captain']]
+league_table = league_table[['rank','rank_change','player_name', 'gw_points', 'last_rank', 'total_points', 'team_name', 'overall_rank', 'Total_value','in_the_bank', 'bench_boost', 'wildcard', 'free_hit', 'tripple_captain', 'goalkeeper', 'bench_points','captain', 'vice_captain','transfers_in','transfers_out','transfer_cost']]
 players = []
 
 #changing nick to real name if they specify otherwise
@@ -205,7 +236,7 @@ amount_of_players =  data_players['total_players']
 league_table['top_percent[%]'] = round((100 *  league_table['overall_rank']) / amount_of_players ,1)
 
 winner_table = league_table[['rank','rank_change','player','team_name','total_points','overall_rank','prize']]
-gw_table = league_table[['player','gw_points','goalkeeper','captain','vice_captain','bench_points','Total_value', 'in_the_bank']]
+gw_table = league_table[['player','gw_points','goalkeeper','captain','vice_captain','bench_points','Total_value', 'in_the_bank', 'transfers_in', 'transfers_out','transfer_cost']]
 teams_table = league_table[['player','bench_boost', 'wildcard', 'free_hit', 'tripple_captain']]
 
 #Getting the number of goalkeepers and captained
@@ -297,7 +328,7 @@ with col2:
     st.plotly_chart(figure,use_container_width=True)
 
 with captain_container:
-    st.header("Capitained")
+    st.header("Captained")
     labels = u_captained
     values = captained_values
     fig = go.Figure(data=[go.Pie(labels=labels, values=values)])
