@@ -23,8 +23,7 @@ gw_data = json.loads(gw_page.text)
 current_gw = gw_data["current_event"]
 
 
-
-#league data - upade day and hour and league name
+#league data - upgrade day and hour and league name
 league_name = data['league']['name']
 last_update = data['last_updated_data'][0:10]
 last_update_hour = data['last_updated_data'][11:16]
@@ -76,10 +75,10 @@ for entry in league_table['entry']:
           vice_captain_id.append(gw_players_data['picks'][i]['element'])
   manager_site = requests.get(manager_url)
   manager_profile = json.loads(manager_site.text)
-  overall_rank.append(manager_profile['current'][current_gw - 1]['overall_rank'])
-  team_value.append(manager_profile['current'][current_gw - 1]['value'])
-  in_the_bank.append(manager_profile['current'][current_gw - 1]['bank'])
-  transfer_cost.append(-1 * manager_profile['current'][current_gw -1]['event_transfers_cost'])
+  overall_rank.append(manager_profile['current'][-1]['overall_rank'])
+  team_value.append(manager_profile['current'][-1]['value'])
+  in_the_bank.append(manager_profile['current'][-1]['bank'])
+  transfer_cost.append(-1 * manager_profile['current'][-1]['event_transfers_cost'])
   if len(manager_profile['chips']) == 0:
     lists['bboost'].append('Avalible')
     lists['3xc'].append('Avalible')
@@ -203,7 +202,7 @@ players = []
 for player in league_table['player_name']:
   if player == 'SOJA SOJA':
     players.append("Kuba Sojka")
-  elif player == 'Pisula One':
+  elif player == 'Darwin Wąs':
     players.append('Hubert Goc')
   else:
     players.append(player)
