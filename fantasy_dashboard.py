@@ -54,12 +54,15 @@ players_in_league = len(league_table['entry'])
 transfers_in = []
 transfers_out = []
 transfer_cost = []
+wildcard_updated = []
+temp_wc = ''
+#very funky code that checks for wildcards available for each player and their overall_rank and team value
 
-#very funky code that checks for wildcards avalible for each player and their overall_rank and team value
-
+#print(wildcard_updated)
 
 
 for entry in league_table['entry']:
+  temp_wc = 'Available'
   manager_url = 'https://fantasy.premierleague.com/api/entry/'+ str(entry) +'/history'
   gw_players_url = 'https://fantasy.premierleague.com/api/entry/' + str(entry) + '/event/' + str(current_gw) +'/picks/'
   gw_transfers_url = 'https://fantasy.premierleague.com/api/entry/' + str(entry) + '/transfers/'
@@ -79,24 +82,41 @@ for entry in league_table['entry']:
   team_value.append(manager_profile['current'][-1]['value'])
   in_the_bank.append(manager_profile['current'][-1]['bank'])
   transfer_cost.append(-1 * manager_profile['current'][-1]['event_transfers_cost'])
+
+  for i in range(0,len(manager_profile['chips'])):
+    #print(len(manager_profile['chips']))
+    if manager_profile['chips'][i]['name'] == 'wildcard':
+      if manager_profile['chips'][i]['event'] <= 19 and current_gw >= 19:
+        #print(entry)
+        #print(manager_profile['chips'][i]['event'])
+        #print(current_gw)
+        temp_wc = 'Available'
+      else:
+        #print(manager_profile['chips'][i]['event'])
+        #print(current_gw)
+        temp_wc = 'Not_Available'
+
+  wildcard_updated.append(temp_wc)
+
+
   if len(manager_profile['chips']) == 0:
-    lists['bboost'].append('Avalible')
-    lists['3xc'].append('Avalible')
-    lists['freehit'].append('Avalible')
-    lists['wildcard'].append('Avalible')
+    lists['bboost'].append('Available') 
+    lists['3xc'].append('Available')
+    lists['freehit'].append('Available')
+    lists['wildcard'].append('Available')
   elif len(manager_profile['chips']) == 1:
     for string in possible_chips:
       if string == manager_profile['chips'][0]['name'] :
-        lists[string].append('Not_avalible')
+        lists[string].append('Not_available')
       else:
-        lists[string].append('Avalible')
+        lists[string].append('Available')
   elif len(manager_profile['chips']) > 1 :
     for i in range(len(manager_profile['chips']) - 1):
       for string in possible_chips:
         if string == manager_profile['chips'][i]['name'] :
-          lists[string].append('Not_avalible')
+          lists[string].append('Not_available')
         else:
-          lists[string].append('Avalible')
+          lists[string].append('Available')
   gw_transfers_site = requests.get(gw_transfers_url)
   gw_transfers_data = json.loads(gw_transfers_site.text)
   trans_in = []
@@ -118,7 +138,7 @@ league_table['in_the_bank'] = in_the_bank
 league_table['overall_rank'] = overall_rank
 league_table['Total_value'] = team_value
 league_table['bench_boost'] = lists['bboost']
-league_table['wildcard'] = lists['wildcard']
+league_table['wildcard'] = wildcard_updated
 league_table['free_hit'] = lists['freehit']
 league_table['tripple_captain']= lists['3xc']
 league_table['transfers_in'] = transfers_in
@@ -275,7 +295,7 @@ goalkeeper_container = st.container()
 team_stats = st.container()
 
 def color_survived(val):
-    color = '#59eb00' if val == 'Avalible' else '#EE4B2B'
+    color = '#59eb00' if val == 'Available' else '#EE4B2B'
     return f'background-color: {color}'
 
 
