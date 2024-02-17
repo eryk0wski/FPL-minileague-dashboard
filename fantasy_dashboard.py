@@ -83,7 +83,7 @@ for entry in league_table['entry']:
   in_the_bank.append(manager_profile['current'][-1]['bank'])
   transfer_cost.append(-1 * manager_profile['current'][-1]['event_transfers_cost'])
 
-  for i in range(0,len(manager_profile['chips'])):
+  for i in range(len(manager_profile['chips'])):
     #print(len(manager_profile['chips']))
     if manager_profile['chips'][i]['name'] == 'wildcard':
       if manager_profile['chips'][i]['event'] <= 19 and current_gw >= 19:
@@ -99,24 +99,42 @@ for entry in league_table['entry']:
   wildcard_updated.append(temp_wc)
 
 
+
   if len(manager_profile['chips']) == 0:
+    print("0")
+
     lists['bboost'].append('Available') 
     lists['3xc'].append('Available')
     lists['freehit'].append('Available')
     lists['wildcard'].append('Available')
   elif len(manager_profile['chips']) == 1:
+    print("1")
     for string in possible_chips:
       if string == manager_profile['chips'][0]['name'] :
         lists[string].append('Not_available')
       else:
         lists[string].append('Available')
   elif len(manager_profile['chips']) > 1 :
-    for i in range(len(manager_profile['chips']) - 1):
-      for string in possible_chips:
-        if string == manager_profile['chips'][i]['name'] :
-          lists[string].append('Not_available')
-        else:
-          lists[string].append('Available')
+
+    processed_chips = set()
+    for i in range(len(manager_profile['chips'])):
+      #for string in possible_chips:
+       # if string == manager_profile['chips'][i]['name'] :
+       #   lists[string].append('Not_available')
+       # else:
+       #   lists[string].append('Available')
+    
+     for chip_info in manager_profile['chips']:
+      name = chip_info['name']
+      if name in possible_chips and name not in processed_chips:
+        lists[name].append('Not_available')
+        processed_chips.add(name)
+
+    # For the chips not found in manager_profile, mark them as 'Available'
+    for string in possible_chips:
+      if string not in processed_chips:
+        lists[string].append('Available')
+
   gw_transfers_site = requests.get(gw_transfers_url)
   gw_transfers_data = json.loads(gw_transfers_site.text)
   trans_in = []
@@ -140,7 +158,7 @@ league_table['Total_value'] = team_value
 league_table['bench_boost'] = lists['bboost']
 league_table['wildcard'] = wildcard_updated
 league_table['free_hit'] = lists['freehit']
-league_table['tripple_captain']= lists['3xc']
+league_table['triple_captain']= lists['3xc']
 league_table['transfers_in'] = transfers_in
 league_table['transfers_out'] = transfers_out
 
@@ -215,7 +233,7 @@ league_table = league_table.rename(columns = {"event_total":"gw_points", "total"
 #league_table['rank_change'] = rank_change
 
 # change columns order
-league_table = league_table[['rank','rank_change','player_name', 'gw_points', 'last_rank', 'total_points', 'team_name', 'overall_rank', 'Total_value','in_the_bank', 'bench_boost', 'wildcard', 'free_hit', 'tripple_captain', 'goalkeeper', 'bench_points','captain', 'vice_captain','transfers_in','transfers_out','transfer_cost']]
+league_table = league_table[['rank','rank_change','player_name', 'gw_points', 'last_rank', 'total_points', 'team_name', 'overall_rank', 'Total_value','in_the_bank', 'bench_boost', 'wildcard', 'free_hit', 'triple_captain', 'goalkeeper', 'bench_points','captain', 'vice_captain','transfers_in','transfers_out','transfer_cost']]
 players = []
 
 #changing nick to real name if they specify otherwise
@@ -256,7 +274,7 @@ league_table['top_percent[%]'] = round((100 *  league_table['overall_rank']) / a
 
 winner_table = league_table[['rank','rank_change','player','team_name','total_points','overall_rank','prize']]
 gw_table = league_table[['player','gw_points','goalkeeper','captain','vice_captain','bench_points','Total_value', 'in_the_bank', 'transfers_in', 'transfers_out','transfer_cost']]
-teams_table = league_table[['player','bench_boost', 'wildcard', 'free_hit', 'tripple_captain']]
+teams_table = league_table[['player','bench_boost', 'wildcard', 'free_hit', 'triple_captain']]
 
 #Getting the number of goalkeepers and captained
 
@@ -329,7 +347,7 @@ with dataset:
 with team_stats:
     tittl = 'Chip\'s avalibility gw ' + str(current_gw)
     st.title(tittl)
-    st.dataframe(teams_table.style.applymap(color_survived, subset=['bench_boost', 'wildcard', 'free_hit', 'tripple_captain']))
+    st.dataframe(teams_table.style.applymap(color_survived, subset=['bench_boost', 'wildcard', 'free_hit', 'triple_captain']))
     
 with gw_stats:
     tittle_dummy = 'Gameweek ' + str(current_gw)
