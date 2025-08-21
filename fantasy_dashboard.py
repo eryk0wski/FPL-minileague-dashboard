@@ -9,14 +9,14 @@ from collections import Counter
 
 
 #league number
-classicleague_number = 343266
+classicleague_number = 851419
 URL = 'https://fantasy.premierleague.com/api/leagues-classic/' + str(classicleague_number) + '/standings/'
 page = requests.get(URL)
 data = json.loads(page.text)
 
 
 #random player from league team_code
-player_id_number = 1247244
+player_id_number = 4727637
 GW_URL = 'https://fantasy.premierleague.com/api/entry/' + str(player_id_number) +'/'
 gw_page = requests.get(GW_URL)
 gw_data = json.loads(gw_page.text)
