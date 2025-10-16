@@ -202,7 +202,7 @@ player_counts = Counter(player_ownership_names)
 data = {'Player_name': list(player_counts.keys()), 'Count': list(player_counts.values())}
 df_players_ownership = pd.DataFrame(data)
 #dont judge me for it
-df_players_ownership['Percent_ownership'] = round(100*(df_players_ownership['Count'] / players_in_league),2)
+df_players_ownership['Percent_ownership'] = round(100*(df_players_ownership['Count'] / players_in_league),0)
 df_players_ownership = df_players_ownership.sort_values(by =['Count'], ascending = False ).reset_index(drop = True)
 
 
@@ -296,7 +296,7 @@ for captain in league_table['captain']:
             captained_values[i] = captained_values[i] + 1
             
 gw_table = gw_table.sort_values(by='gw_points',ascending = False).reset_index(drop = True)
-
+gw_table[['Total_value', 'in_the_bank']] = gw_table[['Total_value', 'in_the_bank']].round(1)
 
 # Changing colour of 2 columns inside the gw table
 def white_font(val):
