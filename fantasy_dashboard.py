@@ -306,8 +306,6 @@ def white_font(val):
 # Apply white font color only to transfers_in and transfers_out columns
 gw_table = gw_table.style.applymap(white_font, subset=['transfers_in', 'transfers_out'])
 
-gw_table[['Total_value','in_the_bank']] = gw_table[['Total_value','in_the_bank']].round(1)
-
 #######################################################STREAMLIT#############################################################################
 
 st.set_page_config(page_title= 'FPL_dashboard', layout="wide" ,page_icon=":soccer:", initial_sidebar_state = "auto")
