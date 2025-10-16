@@ -298,6 +298,7 @@ for captain in league_table['captain']:
 gw_table = gw_table.sort_values(by='gw_points',ascending = False).reset_index(drop = True)
 gw_table[['Total_value', 'in_the_bank']] = gw_table[['Total_value', 'in_the_bank']].round(1)
 
+
 # Changing colour of 2 columns inside the gw table
 def white_font(val):
     return 'color: white;'
@@ -305,7 +306,10 @@ def white_font(val):
 # Apply white font color only to transfers_in and transfers_out columns
 gw_table = gw_table.style.applymap(white_font, subset=['transfers_in', 'transfers_out'])
 
-
+format_dict = {
+    'Total_value': '{:,.1f}',  # Formats as integer with commas, no decimals
+    'in_the_bank': '{:,.1f}'
+}
 
 #######################################################STREAMLIT#############################################################################
 
@@ -360,7 +364,7 @@ with team_stats:
 with gw_stats:
     tittle_dummy = 'Gameweek ' + str(current_gw)
     st.title(tittle_dummy)
-    st.dataframe(gw_table)
+    st.dataframe(gw_table, format=format_dict)
 
 with col1:
     st.header('Ownership percentage')
