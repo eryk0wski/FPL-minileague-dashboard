@@ -306,11 +306,15 @@ def white_font(val):
 # Apply white font color only to transfers_in and transfers_out columns
 gw_table = gw_table.style.applymap(white_font, subset=['transfers_in', 'transfers_out'])
 
-format_dict = {
-    'Total_value': '{:,.1f}',  # Formats as integer with commas, no decimals
-    'in_the_bank': '{:,.1f}'
-}
+def auto_format(val):
+    if isinstance(val, float) and val.is_integer():
+        return f'{int(val)}'
+    return f'{val}'
 
+gw_table = gw_table.style.format({
+    'Total_value': auto_format,
+    'in_the_bank': auto_format
+})
 #######################################################STREAMLIT#############################################################################
 
 st.set_page_config(page_title= 'FPL_dashboard', layout="wide" ,page_icon=":soccer:", initial_sidebar_state = "auto")
@@ -364,7 +368,7 @@ with team_stats:
 with gw_stats:
     tittle_dummy = 'Gameweek ' + str(current_gw)
     st.title(tittle_dummy)
-    st.dataframe(gw_table, format=format_dict)
+    st.dataframe(gw_table)
 
 with col1:
     st.header('Ownership percentage')
