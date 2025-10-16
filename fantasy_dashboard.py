@@ -306,15 +306,8 @@ def white_font(val):
 # Apply white font color only to transfers_in and transfers_out columns
 gw_table = gw_table.style.applymap(white_font, subset=['transfers_in', 'transfers_out'])
 
-def auto_format(val):
-    if isinstance(val, float) and val.is_integer():
-        return f'{int(val)}'
-    return f'{val}'
+gw_table[['Total_value','in_the_bank']] = gw_table[['Total_value','in_the_bank']].round(1)
 
-gw_table = gw_table.style.format({
-    'Total_value': auto_format,
-    'in_the_bank': auto_format
-})
 #######################################################STREAMLIT#############################################################################
 
 st.set_page_config(page_title= 'FPL_dashboard', layout="wide" ,page_icon=":soccer:", initial_sidebar_state = "auto")
