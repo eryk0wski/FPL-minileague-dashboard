@@ -298,6 +298,14 @@ for captain in league_table['captain']:
 gw_table = gw_table.sort_values(by='gw_points',ascending = False).reset_index(drop = True)
 
 
+# Changing colour of 2 columns inside the gw table
+def white_font(val):
+    return 'color: white;'
+
+# Apply white font color only to transfers_in and transfers_out columns
+gw_table = gw_table.style.applymap(white_font, subset=['transfers_in', 'transfers_out'])
+
+
 
 #######################################################STREAMLIT#############################################################################
 
@@ -361,7 +369,7 @@ with col1:
 
 with col2:
     st.header('Ownership chart')
-    figure = px.bar(df_players_ownership.head(13), x='Player_name', y='Percent_ownership',labels={'Player_name':'Player', 'Percent_ownership':'Percentage ownership[%]'})
+    figure = px.bar(df_players_ownership.head(13), x='Player_name', y='Percent_ownership',labels={'Player_name':'Player', 'Percent_ownership':'Percentage ownership[%]'},  color_discrete_sequence=['purple'])
     st.plotly_chart(figure,use_container_width=True)
 
 with captain_container:
